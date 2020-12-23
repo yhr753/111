@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--读取db.properties属性文件-->
+    <properties resource="db.properties"></properties>
+
+    <!--别名机制-->
+    <typeAliases>
+        <!--命名单个类型-->
+        <!--<typeAlias type="com.guigu.demo.pojo.Employee"-->
+        <!--alias="Employee"></typeAlias>-->
+
+        <!--批量命名类型-->
+        <package name="pojo"></package>
+        <package name="Dto"></package>
+    </typeAliases>
+
+    <!--配置数据库的连接信息-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driverClassName}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--引入mapper映射文件-->
+    <mappers>
+        <mapper resource="mapper/ItemsMapper.xml"></mapper>
+    </mappers>
+</configuration>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--定义命名空间-->
+<mapper namespace="mapper.ItemsMapper">
+
+
+    <!--使用foreach删除多个员工-->
+    <delete id="deleteByIds" parameterType="int[]">
+        delete from items
+        <where>
+            <!--<foreach collection="array" item="id"-->
+            <!--open=" id IN (" close=")" separator=",">-->
+            <!--#{id}-->
+            <!--</foreach>-->
+            <foreach open="id=" collection="array" item="id"
+                     separator="or id=">
+                #{id}
+            </foreach>
+        </where>
+    </delete>
+
+
+
+    <!--定义sql片断：用于定义重复的语句片断，以备重复使用-->
+    <sql id="emp_select_where">
+        <where>
+            <if test="name !=null and name !='' ">
+                and name like concat('%', #{name}, '%')
+            </if>
+        </where>
+    </sql>
+
+
+
+    <!--按条件查询-->
+    <select id="selectByDto" parameterType="ItemsDto" resultType="Items">
+        select * from items
+        <include refid="emp_select_where"></include>
+        limit #{pageNo},#{pageSize}
+    </select>
+
+    <!--按条件统计-->
+    <select id="countByDto" parameterType="ItemsDto" resultType="java.lang.Long">
+        select count(*) from items
+        <include refid="emp_select_where"></include>
+    </select>
+
+
+    <!--定义查询的命令
+    id：命令的唯一id
+    parameterType：命令所需要的参数类型
+    resultType：命令执行后的每个数据行的类型
+    类型一般必须是类的完整名字
+    -->
+    <select id="queryAll" resultType="pojo.Items">
+        select * from items
+    </select>
+
+    <!--定义实现单个查询命令-->
+    <select id="queryOne" parameterType="int" resultType="pojo.Items">
+      select * from items where id = #{id}
+    </select>
+
+    <!--定义实现新增的命令-->
+    <insert id="add" parameterType="pojo.Items">
+        insert into items values (
+          null,#{name},#{price},#{detail},#{pic},#{createtime}
+          )
+    </insert>
+
+    <!--定义实现修改的命令-->
+    <update id="pdt"  parameterType="pojo.Items">
+        update items set name=#{name},price=#{price},detail=#{detail} where id = #{id}
+    </update>
+
+    <!--定义实现删除的命令-->
+    <delete id="del" parameterType="int">
+        delete from items where id = #{id}
+    </delete>
+
+</mapper>
